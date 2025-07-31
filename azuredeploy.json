@@ -231,7 +231,7 @@
         },
         "deploymentStatus": {
             "type": "string",
-            "value": "Microsoft Sentinel deployed successfully with core data connectors (AAD + Office 365 + Microsoft Defender for Identity). Note: YAML analytics rules, hunting queries, and workbook need to be imported manually via Sentinel UI."
+            "value": "Microsoft Sentinel deployed successfully with core data connectors (AAD + Office 365 + Microsoft Defender for Identity)."
         }
     }
 }
