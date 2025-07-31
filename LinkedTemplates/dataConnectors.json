@@ -141,7 +141,12 @@
             "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('mdiName'))]",
             "kind": "AzureAdvancedThreatProtection",
             "properties": {
-                "tenantId": "[parameters('tenantId')]"
+                "tenantId": "[parameters('tenantId')]",
+                "dataTypes": {
+                    "alerts": {
+                        "state": "enabled"
+                    }
+                }
             }
         }
     ]
