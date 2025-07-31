@@ -222,31 +222,6 @@
                     }
                 }
             }
-        },
-
-        {
-            "name": "deployBaselineWorkbook",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2020-06-01",
-            "resourceGroup": "[parameters('rgName')]",
-            "dependsOn": [
-                "enableDataConnectors"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(parameters('_artifactsLocation'), '/LinkedTemplates/Baseline-SecurityOverview.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "workspaceName": {
-                        "value": "[parameters('workspaceName')]"
-                    },
-                    "location": {
-                        "value": "Australia East"
-                    }
-                }
-            }
         }
     ],
     "outputs": {
@@ -256,7 +231,7 @@
         },
         "deploymentStatus": {
             "type": "string",
-            "value": "Microsoft Sentinel deployed successfully with core data connectors and baseline security workbook (AAD + Office 365 + Microsoft Defender for Identity + security dashboard). Note: YAML analytics rules and hunting queries need to be imported manually via Sentinel UI."
+            "value": "Microsoft Sentinel deployed successfully with core data connectors (AAD + Office 365 + Microsoft Defender for Identity). Note: YAML analytics rules, hunting queries, and workbook need to be imported manually via Sentinel UI."
         }
     }
 }
