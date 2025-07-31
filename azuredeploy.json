@@ -76,9 +76,7 @@
             },
             "defaultValue": true
         },
-        "enableDiagnostics": {
-            "type": "bool"
-        },
+
         "aadStreams": {
             "type": "array",
             "defaultValue": [
@@ -165,9 +163,6 @@
                     },
                     "enableUeba": {
                         "value": "[parameters('enableUeba')]"
-                    },
-                    "enableDiagnostics": {
-                        "value": "[parameters('enableDiagnostics')]"
                     }
                 }
             }
