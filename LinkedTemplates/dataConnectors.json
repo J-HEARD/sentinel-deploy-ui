@@ -121,7 +121,12 @@
             "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('aadName'))]",
             "kind": "AzureActiveDirectory",
             "properties": {
-                "tenantId": "[parameters('tenantId')]"
+                "tenantId": "[parameters('tenantId')]",
+                "dataTypes": {
+                    "alerts": {
+                        "state": "enabled"
+                    }
+                }
             }
         },
         {
@@ -131,7 +136,18 @@
             "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('o365Name'))]",
             "kind": "Office365",
             "properties": {
-                "tenantId": "[parameters('tenantId')]"
+                "tenantId": "[parameters('tenantId')]",
+                "dataTypes": {
+                    "exchange": {
+                        "state": "enabled"
+                    },
+                    "sharePoint": {
+                        "state": "enabled"
+                    },
+                    "teams": {
+                        "state": "enabled"
+                    }
+                }
             }
         },
         {
