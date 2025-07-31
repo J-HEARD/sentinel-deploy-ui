@@ -52,7 +52,7 @@ Click the button below to open the deployment interface in the Azure Portal:
 This repository contains **infrastructure templates only** — no analytics rules, playbooks, or operational content. 
 All dynamic Sentinel content is managed privately via DevOps pipelines, this exists for fast deployment covering an M365 cloud environment for a "CISO".
 
-# Credit
+#### Credit
 > All credit for this infrastructure go to the Sentinel-All-In-One repository
 
 
