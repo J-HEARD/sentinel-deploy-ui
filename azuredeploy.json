@@ -232,7 +232,7 @@
         },
         "deploymentStatus": {
             "type": "string",
-            "value": "Microsoft Sentinel deployed successfully with core data connectors (AAD + Office 365 + Microsoft Defender for Identity)."
+            "value": "Microsoft Sentinel deployed successfully with core data connectors (AAD + Office 365 + Microsoft Defender for Identity + Microsoft Defender for Endpoint)."
         }
     }
 }
