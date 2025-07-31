@@ -7,6 +7,12 @@
             "metadata": {
                 "description": "Name for the Log Analytics workspace"
             }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Location for all resources."
+            }
         }
     },
     "resources": [
@@ -21,7 +27,7 @@
             "name": "[concat('SecurityInsights','(', parameters('workspaceName'),')')]",
             "type": "Microsoft.OperationsManagement/solutions",
             "apiVersion": "2015-11-01-preview",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('location')]",
             "dependsOn": [
                 "default"
             ],
