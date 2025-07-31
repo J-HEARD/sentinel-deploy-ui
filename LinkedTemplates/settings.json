@@ -15,10 +15,6 @@
             },
             "defaultValue": true
         },
-        "enableDiagnostics": {
-            "type": "bool",
-            "defaultValue": false
-        },
         "settingName": {
             "type": "string",
             "defaultValue": "HealthSettings"
@@ -27,19 +23,6 @@
     "variables": {
     },
     "resources": [
-        {
-            "condition": "[parameters('enableUeba')]",
-            "type": "Microsoft.SecurityInsights/settings",
-            "apiVersion": "2022-12-01-preview",
-            "name": "EntityAnalytics",
-            "kind": "EntityAnalytics",
-            "scope": "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]",
-            "properties": {
-                "entityProviders": [
-                    "AzureActiveDirectory"
-                ]
-            }
-        },
         {
             "condition": "[parameters('enableUeba')]",
             "type": "Microsoft.OperationsManagement/solutions",
@@ -54,29 +37,6 @@
                 "publisher":"Microsoft",
                 "product":"OMSGallery/BehaviorAnalyticsInsights",
                 "promotionCode":""
-            }
-        },
-        {
-            "condition": "[parameters('enableDiagnostics')]",
-            "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights', '/SentinelHealth', '/Microsoft.Insights/', parameters('settingName'))]",
-            "type": "Microsoft.OperationalInsights/workspaces/providers/settings/providers/diagnosticSettings",
-            "apiVersion": "2021-05-01-preview",
-            "properties": {
-                "workspaceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]",
-                "logs": [
-                    {
-                        "category": "Automation",
-                        "enabled": true
-                    },
-                    {
-                        "category": "DataConnectors",
-                        "enabled": true
-                    },
-                    {
-                        "category": "Analytics",
-                        "enabled": true
-                    }
-                ]
             }
         }
     ],

@@ -51,14 +51,7 @@
     },
     "variables": {
         "aadName": "[concat('aad', uniqueString(resourceGroup().id))]",
-        "m365dName": "[concat('m365d', uniqueString(resourceGroup().id))]",
-        "mdiName": "[concat('mdi', uniqueString(resourceGroup().id))]",
-        "mdeName": "[concat('mde', uniqueString(resourceGroup().id))]",
-        "mdoName": "[concat('mdo', uniqueString(resourceGroup().id))]",
-        "mcasName": "[concat('mcas', uniqueString(resourceGroup().id))]",
-        "o365Name": "[concat('o365', uniqueString(resourceGroup().id))]",
-        "teamsName": "[concat('teams', uniqueString(resourceGroup().id))]",
-        "complianceName": "[concat('compliance', uniqueString(resourceGroup().id))]"
+        "o365Name": "[concat('o365', uniqueString(resourceGroup().id))]"
     },
     "resources": [
         {
@@ -137,81 +130,6 @@
         },
         {
             "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
-            "apiVersion": "2022-12-01-preview",
-            "location": "[parameters('location')]",
-            "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('m365dName'))]",
-            "kind": "MicrosoftThreatProtection",
-            "properties": {
-                "tenantId": "[parameters('tenantId')]",
-                "dataTypes": {
-                    "incidents": {
-                        "state": "enabled"
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
-            "apiVersion": "2020-01-01",
-            "location": "[parameters('location')]",
-            "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('mdiName'))]",
-            "kind": "AzureAdvancedThreatProtection",
-            "properties": {
-                "tenantId": "[parameters('tenantId')]",
-                "dataTypes": {
-                    "alerts": {
-                        "state": "enabled"
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
-            "apiVersion": "2020-01-01",
-            "location": "[parameters('location')]",
-            "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('mdeName'))]",
-            "kind": "MDATP",
-            "properties": {
-                "tenantId": "[parameters('tenantId')]",
-                "dataTypes": {
-                    "alerts": {
-                        "state": "enabled"
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
-            "apiVersion": "2020-01-01",
-            "location": "[parameters('location')]",
-            "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('mdoName'))]",
-            "kind": "OfficeATP",
-            "properties": {
-                "tenantId": "[parameters('tenantId')]",
-                "dataTypes": {
-                    "alerts": {
-                        "state": "enabled"
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
-            "apiVersion": "2020-01-01",
-            "location": "[parameters('location')]",
-            "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('mcasName'))]",
-            "kind": "CloudAppSecurity",
-            "properties": {
-                "tenantId": "[parameters('tenantId')]",
-                "dataTypes": {
-                    "alerts": {
-                        "state": "enabled"
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
             "apiVersion": "2020-01-01",
             "location": "[parameters('location')]",
             "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('o365Name'))]",
@@ -226,21 +144,6 @@
                         "state": "enabled"
                     },
                     "teams": {
-                        "state": "enabled"
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
-            "apiVersion": "2022-12-01-preview",
-            "location": "[parameters('location')]",
-            "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('teamsName'))]",
-            "kind": "MicrosoftTeams",
-            "properties": {
-                "tenantId": "[parameters('tenantId')]",
-                "dataTypes": {
-                    "logs": {
                         "state": "enabled"
                     }
                 }
