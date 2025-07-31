@@ -35,7 +35,7 @@ Click the button below to open the deployment interface in the Azure Portal:
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](
 https://portal.azure.com/#create/Microsoft.Template/uri/
-https%3A%2F%2Fraw.githubusercontent.com%2F<your-username>%2Fsentinel-deploy-ui%2Fmain%2Fazuredeploy.json)
+https%3A%2F%2Fraw.githubusercontent.com%2FJ-HEARD%2Fsentinel-deploy-ui%2Fmain%2Fazuredeploy.json)
 
 ---
 
