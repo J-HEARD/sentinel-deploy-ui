@@ -1,10 +1,10 @@
-# 🛡️ Sentinel Deploy UI
+# 🛡️ Sentinel Deploy UI 🛡️
 
 This repository contains the infrastructure templates used to deploy a baseline Microsoft Sentinel environment into an Azure tenant. It is intended to be launched using the **Deploy to Azure** button below.
 
 ---
 
-## 🚀 What This Deploys
+## What This Deploys
 
 This deployment will:
 
@@ -19,7 +19,7 @@ This deployment will:
 
 ---
 
-## 📌 Usage Requirements
+## Usage Requirements
 
 You must have the following permissions to deploy:
 
@@ -29,7 +29,7 @@ You must have the following permissions to deploy:
 
 ---
 
-## 📦 Deploy Now
+## Deploy
 
 Click the button below to open the deployment interface in the Azure Portal:
 
@@ -37,7 +37,7 @@ Click the button below to open the deployment interface in the Azure Portal:
 
 ---
 
-## 🧱 Repo Contents
+## Repo Contents
 
 | File | Purpose |
 |------|---------|
@@ -47,7 +47,8 @@ Click the button below to open the deployment interface in the Azure Portal:
 
 ---
 
-## 🔒 Security Note
+## Security Note
 
-This repository contains **infrastructure templates only** — no analytics rules, playbooks, or operational content. All dynamic Sentinel content is managed privately via DevOps pipelines.
+This repository contains **infrastructure templates only** — no analytics rules, playbooks, or operational content. 
+All dynamic Sentinel content is managed privately via DevOps pipelines, this exists for fast deployment covering an M365 cloud environment for a "CISO".
 
