@@ -160,17 +160,6 @@
                             "required": false,
                             "validationMessage": "Please choose"
                         }
-                    },
-                    {
-                        "name": "enableDiagnostics",
-                        "type": "Microsoft.Common.CheckBox",
-                        "label": "Enable Sentinel health diagnostics?",
-                        "toolTip": "This will enable diagnostics settings for Analytics rules, Data Connectors and Automation rules. [Learn more](https://learn.microsoft.com/azure/sentinel/health-audit)",
-                        "constraints": {
-                            "required": false,
-                            "validationMessage": "Please select"
-                        },
-                        "visible": true
                     }
                 ]
             }
@@ -182,7 +171,6 @@
             "pricingTier": "[basics('pricingTier')]",
             "capacityReservation": "[basics('capacityReservation')]",
             "enableUeba": "[steps('settings').enableUeba]",
-            "enableDiagnostics": "[steps('settings').enableDiagnostics]",
             "rgName": "[basics('rgName')]"
         }
     }
