@@ -76,7 +76,6 @@
             },
             "defaultValue": true
         },
-
         "aadStreams": {
             "type": "array",
             "defaultValue": [
