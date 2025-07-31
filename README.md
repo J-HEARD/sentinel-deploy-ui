@@ -27,13 +27,10 @@ The following Microsoft-native connectors are deployed and surfaced in Sentinel:
 - Azure Activity  
 - Microsoft 365 (formerly Office 365)  
 - Microsoft Defender for Identity  
-- Microsoft Defender XDR *(auto-surfaced; not configured in this repo)*  
+- Microsoft Defender XDR
 - Microsoft Entra ID  
 - Microsoft Entra ID Protection  
 - Microsoft Defender for Cloud (Legacy – subscription-based)
-
-> **Note:** This deployment does not configure individual data types (e.g., `AuditLogs`, `RiskyUsers`, etc.).  
-> These configurations, along with Defender XDR integration and ingestion validation, are handled in the **DevOps phase**.
 
 ---
 
@@ -65,10 +62,9 @@ Click the button below to open the deployment interface in the Azure Portal:
 
 ---
 
-## Security Note
+## Note
 
 This repository focuses strictly on deploying static infrastructure — it does not include any analytics rules, automation, playbooks, or hunting queries.  
 All operational Sentinel content is managed separately through DevOps pipelines.
-
 
 ---
