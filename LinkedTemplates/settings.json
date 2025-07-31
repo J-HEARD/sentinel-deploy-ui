@@ -15,12 +15,6 @@
             },
             "defaultValue": true
         },
-        "identityProviders": {
-            "type": "array",
-            "metadata": {
-                "description": "Array of identity providers to be synched with UEBA. Valid identity providers are 'ActiveDirectory' and 'AzureActiveDirectory'"
-            }
-        },
         "enableDiagnostics": {
             "type": "bool",
             "defaultValue": false
@@ -41,7 +35,9 @@
             "kind": "EntityAnalytics",
             "scope": "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]",
             "properties": {
-                "entityProviders": "[parameters('identityProviders')]"
+                "entityProviders": [
+                    "AzureActiveDirectory"
+                ]
             }
         },
         {
