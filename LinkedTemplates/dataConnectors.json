@@ -52,7 +52,9 @@
     "variables": {
         "aadName": "[concat('aad', uniqueString(resourceGroup().id))]",
         "o365Name": "[concat('o365', uniqueString(resourceGroup().id))]",
-        "mdiName": "[concat('mdi', uniqueString(resourceGroup().id))]"
+        "mdiName": "[concat('mdi', uniqueString(resourceGroup().id))]",
+        "entraIdProtectionName": "[concat('entraIdProtection', uniqueString(resourceGroup().id))]",
+        "defenderForCloudName": "[concat('defenderForCloud', uniqueString(resourceGroup().id))]"
     },
     "resources": [
         {
@@ -125,6 +127,42 @@
                 "dataTypes": {
                     "alerts": {
                         "state": "enabled"
+                    },
+                    "signinLogs": {
+                        "state": "enabled"
+                    },
+                    "auditLogs": {
+                        "state": "enabled"
+                    },
+                    "nonInteractiveUserSignInLogs": {
+                        "state": "enabled"
+                    },
+                    "servicePrincipalSignInLogs": {
+                        "state": "enabled"
+                    },
+                    "managedIdentitySignInLogs": {
+                        "state": "enabled"
+                    },
+                    "provisioningLogs": {
+                        "state": "enabled"
+                    },
+                    "adfsSignInLogs": {
+                        "state": "enabled"
+                    },
+                    "userRiskEvents": {
+                        "state": "enabled"
+                    },
+                    "riskyUsers": {
+                        "state": "enabled"
+                    },
+                    "networkAccessTrafficLogs": {
+                        "state": "enabled"
+                    },
+                    "riskyServicePrincipals": {
+                        "state": "enabled"
+                    },
+                    "servicePrincipalRiskEvents": {
+                        "state": "enabled"
                     }
                 }
             }
@@ -146,6 +184,27 @@
                     },
                     "teams": {
                         "state": "enabled"
+                    },
+                    "oneDrive": {
+                        "state": "enabled"
+                    },
+                    "powerBI": {
+                        "state": "enabled"
+                    },
+                    "dynamics365": {
+                        "state": "enabled"
+                    },
+                    "yammer": {
+                        "state": "enabled"
+                    },
+                    "skypeForBusiness": {
+                        "state": "enabled"
+                    },
+                    "office365Project": {
+                        "state": "enabled"
+                    },
+                    "office365IRM": {
+                        "state": "enabled"
                     }
                 }
             }
@@ -160,6 +219,66 @@
                 "tenantId": "[parameters('tenantId')]",
                 "dataTypes": {
                     "alerts": {
+                        "state": "enabled"
+                    },
+                    "securityEvents": {
+                        "state": "enabled"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
+            "apiVersion": "2020-01-01",
+            "location": "[parameters('location')]",
+            "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('entraIdProtectionName'))]",
+            "kind": "AzureActiveDirectoryIdentityProtection",
+            "properties": {
+                "tenantId": "[parameters('tenantId')]",
+                "dataTypes": {
+                    "alerts": {
+                        "state": "enabled"
+                    },
+                    "userRiskEvents": {
+                        "state": "enabled"
+                    },
+                    "riskyUsers": {
+                        "state": "enabled"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
+            "apiVersion": "2020-01-01",
+            "location": "[parameters('location')]",
+            "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('defenderForCloudName'))]",
+            "kind": "AzureSecurityCenter",
+            "properties": {
+                "subscriptionId": "[parameters('subscriptionId')]",
+                "dataTypes": {
+                    "alerts": {
+                        "state": "enabled"
+                    },
+                    "securityEvents": {
+                        "state": "enabled"
+                    },
+                    "vulnerabilityAssessment": {
+                        "state": "enabled"
+                    },
+                    "regulatoryCompliance": {
+                        "state": "enabled"
+                    },
+                    "secureScoreControls": {
+                        "state": "enabled"
+                    },
+                    "secureScore": {
+                        "state": "enabled"
+                    },
+                    "securityContacts": {
+                        "state": "enabled"
+                    },
+                    "securitySolutions": {
                         "state": "enabled"
                     }
                 }
