@@ -15,7 +15,7 @@ This deployment will:
 - Create a **User Assigned Managed Identity (UAMI)** (if required)
 - Prepare the environment for additional security content
 
-> All names and locations have been aligned to CISO conventions and will deploy into your selected Azure Subscription and Resource Group.
+> All names and locations have been aligned to a "CISO" like convention and will deploy into your selected Azure Subscription and Resource Group.
 
 ---
 
@@ -51,4 +51,8 @@ Click the button below to open the deployment interface in the Azure Portal:
 
 This repository contains **infrastructure templates only** — no analytics rules, playbooks, or operational content. 
 All dynamic Sentinel content is managed privately via DevOps pipelines, this exists for fast deployment covering an M365 cloud environment for a "CISO".
+
+# Credit
+> All credit for this infrastructure go to the Sentinel-All-In-One repository
+
 
