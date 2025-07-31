@@ -171,7 +171,7 @@
             "apiVersion": "2020-01-01",
             "location": "[parameters('location')]",
             "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('mdeName'))]",
-            "kind": "MDATP",
+            "kind": "MicrosoftDefenderATP",
             "properties": {
                 "tenantId": "[parameters('tenantId')]",
                 "dataTypes": {
