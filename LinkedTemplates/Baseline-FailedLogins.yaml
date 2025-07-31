@@ -1,0 +1,57 @@
+id: baseline-failed-logins
+name: Baseline - Multiple Failed Login Attempts
+description: |
+  Baseline Content Pack - Detects multiple failed login attempts that may indicate brute force attacks or account compromise attempts.
+  This rule monitors for patterns of failed authentication across Azure AD and Office 365 services.
+  
+  Data Sources: AuditLogs
+  Severity: Low
+  Tactics: Initial Access
+  Techniques: T1078, T1110
+
+severity: Low
+enabled: true
+query: |
+  AuditLogs
+  | where TimeGenerated > ago(24h)
+  | where OperationName == "UserLoginFailed"
+  | extend 
+      UserPrincipalName = tostring(parse_json(TargetResources).userPrincipalName),
+      IPAddress = tostring(parse_json(TargetResources).ipAddress),
+      UserAgent = tostring(parse_json(TargetResources).userAgent),
+      AppDisplayName = tostring(parse_json(TargetResources).appDisplayName)
+  | where isnotempty(UserPrincipalName)
+  | summarize 
+      FailedAttempts = count(),
+      IPAddresses = make_set(IPAddress),
+      UserAgents = make_set(UserAgent),
+      Applications = make_set(AppDisplayName),
+      LastAttempt = max(TimeGenerated)
+      by UserPrincipalName, bin(TimeGenerated, 1h)
+  | where FailedAttempts > 5  // Threshold for failed attempts
+  | where array_length(IPAddresses) > 1  // Multiple IP addresses
+  | project 
+      TimeGenerated,
+      UserPrincipalName,
+      FailedAttempts,
+      IPAddresses,
+      UserAgents,
+      Applications,
+      LastAttempt
+
+queryFrequency: 15m
+queryPeriod: 1h
+triggerOperator: gt
+triggerThreshold: 0
+suppressionDuration: 1h
+suppressionEnabled: true
+tactics:
+  - Initial_Access
+techniques:
+  - T1078
+  - T1110
+tags:
+  - baseline
+  - failed-logins
+  - brute-force
+  - authentication 

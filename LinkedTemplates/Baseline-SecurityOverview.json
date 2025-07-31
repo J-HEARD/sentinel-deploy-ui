@@ -1,0 +1,115 @@
+{
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json",
+  "name": "Baseline Security Overview",
+  "description": "Baseline Content Pack - Security overview dashboard using default data sources (AzureActivity, OfficeActivity, AuditLogs)",
+  "version": "1.0.0",
+  "isPreview": true,
+  "author": "Baseline Content Pack",
+  "galleries": [
+    {
+      "type": "workbook",
+      "resourceType": "Azure Monitor",
+      "order": 100
+    }
+  ],
+  "parameters": [
+    {
+      "name": "TimeRange",
+      "type": "parameter",
+      "defaultValue": "24h",
+      "label": "Time Range",
+      "values": [
+        {
+          "label": "Last 1 hour",
+          "value": "1h"
+        },
+        {
+          "label": "Last 6 hours",
+          "value": "6h"
+        },
+        {
+          "label": "Last 12 hours",
+          "value": "12h"
+        },
+        {
+          "label": "Last 24 hours",
+          "value": "24h"
+        },
+        {
+          "label": "Last 7 days",
+          "value": "7d"
+        }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": "## Baseline Security Overview\n\nThis dashboard provides security monitoring using only default data sources:\n- **AzureActivity**: Azure resource management activities\n- **OfficeActivity**: Office 365 activities (Exchange, SharePoint, Teams)\n- **AuditLogs**: Azure AD authentication and administrative activities\n\n### Key Metrics\n- Failed login attempts\n- Suspicious Office 365 activity\n- Azure resource creation patterns\n- Administrative privilege changes"
+      },
+      "name": "header"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "// Failed Login Attempts\nAuditLogs\n| where TimeGenerated > ago({TimeRange})\n| where OperationName == \"UserLoginFailed\"\n| summarize FailedAttempts = count() by bin(TimeGenerated, 1h)\n| render timechart",
+        "size": 0,
+        "title": "Failed Login Attempts Over Time",
+        "showAnalytics": true
+      },
+      "name": "failed-logins-chart"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "// Office 365 Activity Summary\nOfficeActivity\n| where TimeGenerated > ago({TimeRange})\n| summarize ActivityCount = count() by Operation\n| top 10 by ActivityCount\n| render barchart",
+        "size": 0,
+        "title": "Top Office 365 Operations",
+        "showAnalytics": true
+      },
+      "name": "office-activity-summary"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "// Azure Resource Creation\nAzureActivity\n| where TimeGenerated > ago({TimeRange})\n| where OperationName contains \"Create\"\n| where ActivityStatus == \"Success\"\n| summarize ResourceCount = count() by ResourceType\n| top 10 by ResourceCount\n| render barchart",
+        "size": 0,
+        "title": "Azure Resource Creation by Type",
+        "showAnalytics": true
+      },
+      "name": "azure-resource-creation"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "// Administrative Activities\nAzureActivity\n| where TimeGenerated > ago({TimeRange})\n| where OperationName in (\"Add member to role\", \"Add member to group\", \"Remove member from role\")\n| where ActivityStatus == \"Success\"\n| summarize AdminChanges = count() by OperationName\n| render barchart",
+        "size": 0,
+        "title": "Administrative Privilege Changes",
+        "showAnalytics": true
+      },
+      "name": "admin-privilege-changes"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "// Recent Suspicious Activities\nlet suspiciousOffice = OfficeActivity\n| where TimeGenerated > ago({TimeRange})\n| where Operation in (\"FileDownloaded\", \"MailItemsAccessed\", \"TeamsSessionStarted\")\n| extend UserId = tostring(parse_json(Parameters).UserId)\n| where isnotempty(UserId)\n| summarize ActivityCount = count() by UserId\n| where ActivityCount > 50;\n\nlet suspiciousAzure = AzureActivity\n| where TimeGenerated > ago({TimeRange})\n| where OperationName contains \"Create\"\n| where ActivityStatus == \"Success\"\n| summarize ResourceCount = count() by Caller\n| where ResourceCount > 3;\n\nsuspiciousOffice\n| union suspiciousAzure\n| order by ActivityCount desc\n| take 10",
+        "size": 0,
+        "title": "Top Suspicious Activity Users",
+        "showAnalytics": true
+      },
+      "name": "suspicious-activity-users"
+    }
+  ],
+  "tags": [
+    "baseline",
+    "security-overview",
+    "monitoring",
+    "dashboard"
+  ]
+} 

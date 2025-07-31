@@ -1,0 +1,65 @@
+id: baseline-suspicious-office-activity
+name: Baseline - Suspicious Office 365 Activity Detection
+description: |
+  Baseline Content Pack - Detects suspicious activities across Office 365 services including Exchange, SharePoint, and Teams.
+  This rule monitors for unusual patterns that may indicate account compromise or data exfiltration.
+  
+  Data Sources: OfficeActivity (Exchange, SharePoint, Teams)
+  Severity: Medium
+  Tactics: Initial Access, Data Exfiltration
+  Techniques: T1078, T1567
+
+severity: Medium
+enabled: true
+query: |
+  OfficeActivity
+  | where TimeGenerated > ago(24h)
+  | where Operation in (
+      // Exchange suspicious activities
+      "MailItemsAccessed", "MailboxLogin", "Send", "MailboxPermission",
+      // SharePoint suspicious activities  
+      "FileDownloaded", "FileAccessed", "FileSyncDownloadedFull", "FileSyncUploadedFull",
+      // Teams suspicious activities
+      "TeamsSessionStarted", "TeamsSessionEnded", "TeamsChannelMessage"
+  )
+  | extend 
+      UserId = tostring(parse_json(Parameters).UserId),
+      ClientIP = tostring(parse_json(Parameters).ClientIP),
+      UserAgent = tostring(parse_json(Parameters).UserAgent),
+      ObjectId = tostring(parse_json(Parameters).ObjectId)
+  | where isnotempty(UserId)
+  | summarize 
+      ActivityCount = count(),
+      Operations = make_set(Operation),
+      ClientIPs = make_set(ClientIP),
+      UserAgents = make_set(UserAgent),
+      LastActivity = max(TimeGenerated)
+      by UserId, bin(TimeGenerated, 1h)
+  | where ActivityCount > 50  // High activity threshold
+  | where array_length(ClientIPs) > 3  // Multiple IP addresses
+  | project 
+      TimeGenerated,
+      UserId,
+      ActivityCount,
+      Operations,
+      ClientIPs,
+      UserAgents,
+      LastActivity
+
+queryFrequency: 1h
+queryPeriod: 24h
+triggerOperator: gt
+triggerThreshold: 0
+suppressionDuration: 2h
+suppressionEnabled: true
+tactics:
+  - Initial_Access
+  - Data_Exfiltration
+techniques:
+  - T1078
+  - T1567
+tags:
+  - baseline
+  - office365
+  - suspicious-activity
+  - data-exfiltration 
