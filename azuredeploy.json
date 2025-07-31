@@ -223,37 +223,7 @@
                     }
                 }
             }
-        },
-        {
-            "name": "configureDataTypes",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2020-06-01",
-            "resourceGroup": "[parameters('rgName')]",
-            "dependsOn": [
-                "enableDataConnectors"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(parameters('_artifactsLocation'), '/LinkedTemplates/configureDataTypes.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "workspaceName": {
-                        "value": "[parameters('workspaceName')]"
-                    },
-                    "tenantId": {
-                        "value": "[subscription().tenantId]"
-                    },
-                    "subscriptionId": {
-                        "value": "[subscription().subscriptionId]"
-                    },
-                    "location": {
-                        "value": "Australia East"
-                    }
-                }
-            }
-        }
+
     ],
     "outputs": {
         "workspaceName": {
@@ -262,7 +232,7 @@
         },
         "deploymentStatus": {
             "type": "string",
-            "value": "Microsoft Sentinel deployed successfully with data connectors and comprehensive data type configuration (AAD + Office 365 + Microsoft Defender for Identity)."
+            "value": "Microsoft Sentinel deployed successfully with core data connectors (AAD + Office 365 + Microsoft Defender for Identity)."
         }
     }
 }
