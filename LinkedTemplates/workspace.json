@@ -95,54 +95,16 @@
                     "name": "[parameters('pricingTier')]"
                 }
             }
-        },
-        {
-            "type": "Microsoft.SecurityInsights/onboardingStates",
-            "name": "default",
-            "scope": "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]",
-            "apiVersion": "2022-12-01-preview",
-            "properties": {
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]"
-            ]
-        },
-        {
-            "name": "[concat('SecurityInsights','(', parameters('workspaceName'),')')]",
-            "type": "Microsoft.OperationsManagement/solutions",
-            "apiVersion": "2015-11-01-preview",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "default"
-            ],
-            "properties": {
-                "workspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]",
-                "sku": {
-                    "name": "Unified"
-                }
-            },
-            "plan": {
-                "name": "[concat('SecurityInsights','(', parameters('workspaceName'),')')]",
-                "product": "OMSGallery/SecurityInsights",
-                "publisher": "Microsoft",
-                "promotionCode": ""
-            }
-        },
-        {
-            "type": "Microsoft.SecurityInsights/incidents",
-            "name": "allinone-empty-incident",
-            "dependsOn": [
-                "default"
-            ],
-            "scope": "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]",
-            "apiVersion":"2022-12-01-preview",
-            "properties": {
-                "severity": "Informational",
-                "status": "Closed",
-                "title": "placeholder incident",
-                "classification": "Undetermined"
-            }
         }
     ],
-    "outputs": {}
+    "outputs": {
+        "workspaceId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]"
+        },
+        "workspaceName": {
+            "type": "string",
+            "value": "[parameters('workspaceName')]"
+        }
+    }
 }
