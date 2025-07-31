@@ -51,7 +51,8 @@
     },
     "variables": {
         "aadName": "[concat('aad', uniqueString(resourceGroup().id))]",
-        "o365Name": "[concat('o365', uniqueString(resourceGroup().id))]"
+        "o365Name": "[concat('o365', uniqueString(resourceGroup().id))]",
+        "mdiName": "[concat('mdi', uniqueString(resourceGroup().id))]"
     },
     "resources": [
         {
@@ -147,6 +148,16 @@
                         "state": "enabled"
                     }
                 }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
+            "apiVersion": "2020-01-01",
+            "location": "[parameters('location')]",
+            "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('mdiName'))]",
+            "kind": "AzureAdvancedThreatProtection",
+            "properties": {
+                "tenantId": "[parameters('tenantId')]"
             }
         }
     ]

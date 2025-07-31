@@ -230,9 +230,9 @@
             "type": "string",
             "value": "[parameters('workspaceName')]"
         },
-        "dataConnectorsList": {
+        "deploymentStatus": {
             "type": "string",
-            "value": "Default data connectors enabled"
+            "value": "Microsoft Sentinel deployed successfully with core data connectors (AAD + Office 365 + Microsoft Defender for Identity)."
         }
     }
 }
