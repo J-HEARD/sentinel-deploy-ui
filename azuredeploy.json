@@ -79,13 +79,6 @@
         "enableDiagnostics": {
             "type": "bool"
         },
-        "location": {
-            "type": "string",
-            "defaultValue": "[resourceGroup().location]",
-            "metadata": {
-                "description": "Location for all resources."
-            }
-        },
         "aadStreams": {
             "type": "array",
             "defaultValue": [
@@ -94,44 +87,6 @@
             ],
             "metadata": {
                 "description": "The list of data types to enable for Azure AD connector"
-            }
-        },
-        "enableSolutions1P": {
-            "type": "array",
-            "defaultValue": [],
-            "metadata": {
-                "description": "List of first-party solutions to enable"
-            }
-        },
-        "enableSolutionsEssentials": {
-            "type": "array",
-            "defaultValue": [],
-            "metadata": {
-                "description": "List of essential solutions to enable"
-            }
-        },
-        "enableSolutionsTraining": {
-            "type": "array",
-            "defaultValue": [],
-            "metadata": {
-                "description": "List of training solutions to enable"
-            }
-        },
-        "severityLevels": {
-            "type": "array",
-            "defaultValue": [
-                "High",
-                "Medium"
-            ],
-            "metadata": {
-                "description": "Severity levels for alerts"
-            }
-        },
-        "enableScheduledAlerts": {
-            "type": "bool",
-            "defaultValue": true,
-            "metadata": {
-                "description": "Whether to enable scheduled alerts"
             }
         },
         "_artifactsLocation": {
@@ -184,7 +139,7 @@
                         "value": "[parameters('capacityReservation')]"
                     },
                     "location": {
-                        "value": "[parameters('location')]"
+                        "value": "[resourceGroup().location]"
                     }
                 }
             }
@@ -222,8 +177,7 @@
             "apiVersion": "2020-06-01",
             "resourceGroup": "[parameters('rgName')]",
             "dependsOn": [
-                "workspaceCreation",
-                "enableSolutionsAndAlerts"
+                "workspaceCreation"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -245,48 +199,7 @@
                         "value": "[subscription().subscriptionId]"
                     },
                     "location": {
-                        "value": "[parameters('location')]"
-                    }
-                }
-            }
-        },
-        {
-            "condition": "[or(not(empty(parameters('enableSolutions1P'))),not(empty(parameters('enableSolutionsEssentials'))),not(empty(parameters('enableSolutionsTraining'))))]",
-            "name": "enableSolutionsAndAlerts",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2020-06-01",
-            "resourceGroup": "[parameters('rgName')]",
-            "dependsOn": [
-                "workspaceCreation",
-                "[resourceId('Microsoft.Resources/resourceGroups',parameters('rgName'))]"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/Tools/Sentinel-All-In-One/v2/LinkedTemplates/solutionsAndAlerts.json",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "enableSolutions1P": {
-                        "value": "[replace(replace(string(parameters('enableSolutions1P')),'[',''),']','')]"
-                    },
-                    "enableSolutionsEssentials": {
-                        "value": "[replace(replace(string(parameters('enableSolutionsEssentials')),'[',''),']','')]"
-                    },
-                    "enableSolutionsTraining": {
-                        "value": "[replace(replace(string(parameters('enableSolutionsTraining')),'[',''),']','')]"
-                    },
-                    "workspaceName": {
-                        "value": "[parameters('workspaceName')]"
-                    },
-                    "severityLevels": {
-                        "value": "[replace(replace(string(parameters('severityLevels')),'[',''),']','')]"
-                    },
-                    "enableAlerts": {
-                        "value": "[parameters('enableScheduledAlerts')]"
-                    },
-                    "location": {
-                        "value": "[parameters('location')]"
+                        "value": "[resourceGroup().location]"
                     }
                 }
             }
