@@ -1,4 +1,4 @@
-# 🛡️ Sentinel Deploy UI 🛡️
+# 🛡️ Sentinel Deploy 🛡️
 
 This repository contains the infrastructure templates used to deploy a baseline Microsoft Sentinel environment into an Azure tenant. It is intended to be launched using the **Deploy to Azure** button below.
 
