@@ -140,7 +140,7 @@
                         "value": "[parameters('capacityReservation')]"
                     },
                     "location": {
-                        "value": "[resourceGroup().location]"
+                        "value": "Australia East"
                     }
                 }
             }
@@ -200,7 +200,7 @@
                         "value": "[subscription().subscriptionId]"
                     },
                     "location": {
-                        "value": "[resourceGroup().location]"
+                        "value": "Australia East"
                     }
                 }
             }
