@@ -121,48 +121,7 @@
             "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('aadName'))]",
             "kind": "AzureActiveDirectory",
             "properties": {
-                "tenantId": "[parameters('tenantId')]",
-                "dataTypes": {
-                    "alerts": {
-                        "state": "enabled"
-                    },
-                    "signinLogs": {
-                        "state": "enabled"
-                    },
-                    "auditLogs": {
-                        "state": "enabled"
-                    },
-                    "nonInteractiveUserSignInLogs": {
-                        "state": "enabled"
-                    },
-                    "servicePrincipalSignInLogs": {
-                        "state": "enabled"
-                    },
-                    "managedIdentitySignInLogs": {
-                        "state": "enabled"
-                    },
-                    "provisioningLogs": {
-                        "state": "enabled"
-                    },
-                    "adfsSignInLogs": {
-                        "state": "enabled"
-                    },
-                    "userRiskEvents": {
-                        "state": "enabled"
-                    },
-                    "riskyUsers": {
-                        "state": "enabled"
-                    },
-                    "networkAccessTrafficLogs": {
-                        "state": "enabled"
-                    },
-                    "riskyServicePrincipals": {
-                        "state": "enabled"
-                    },
-                    "servicePrincipalRiskEvents": {
-                        "state": "enabled"
-                    }
-                }
+                "tenantId": "[parameters('tenantId')]"
             }
         },
         {
@@ -172,39 +131,7 @@
             "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('o365Name'))]",
             "kind": "Office365",
             "properties": {
-                "tenantId": "[parameters('tenantId')]",
-                "dataTypes": {
-                    "exchange": {
-                        "state": "enabled"
-                    },
-                    "sharePoint": {
-                        "state": "enabled"
-                    },
-                    "teams": {
-                        "state": "enabled"
-                    },
-                    "oneDrive": {
-                        "state": "enabled"
-                    },
-                    "powerBI": {
-                        "state": "enabled"
-                    },
-                    "dynamics365": {
-                        "state": "enabled"
-                    },
-                    "yammer": {
-                        "state": "enabled"
-                    },
-                    "skypeForBusiness": {
-                        "state": "enabled"
-                    },
-                    "office365Project": {
-                        "state": "enabled"
-                    },
-                    "office365IRM": {
-                        "state": "enabled"
-                    }
-                }
+                "tenantId": "[parameters('tenantId')]"
             }
         },
         {
@@ -214,15 +141,7 @@
             "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('mdiName'))]",
             "kind": "AzureAdvancedThreatProtection",
             "properties": {
-                "tenantId": "[parameters('tenantId')]",
-                "dataTypes": {
-                    "alerts": {
-                        "state": "enabled"
-                    },
-                    "securityEvents": {
-                        "state": "enabled"
-                    }
-                }
+                "tenantId": "[parameters('tenantId')]"
             }
         }
     ]
