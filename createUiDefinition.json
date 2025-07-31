@@ -6,14 +6,7 @@
         "config": {
             "isWizard": false,
             "basics": {
-                "description": "**Microsoft Sentinel All-In-One** deployment, see more information about this project [here](https://github.com/Azure/Azure-Sentinel/Tools/Sentinel-All-In-One/).",
-                "location": {
-                    "label": "Location",
-                    "toolTip": "Location for all resources",
-                    "resourceTypes": [
-                        "Microsoft.OperationalInsights/workspaces"
-                    ]
-                }
+                "description": "**Microsoft Sentinel All-In-One** deployment, see more information about this project [here](https://github.com/Azure/Azure-Sentinel/Tools/Sentinel-All-In-One/)."
             }
         },
         "basics": [
@@ -357,34 +350,6 @@
                           "required": false
                       },
                       "visible": true
-                  },
-                  {
-                    "name": "enableSolutionsTraining",
-                      "type": "Microsoft.Common.DropDown",
-                      "label": "Select Training and Tutorials Content Hub solutions to install",
-                      "placeholder": "",
-                      "multiselect": true,
-                      "filter": true,
-                      "filterPlaceholder": "Filter items ...",
-                      "multiLine": true,
-                      "defaultDescription": "A value for selection",
-                      "toolTip": "Select the training and tutorials solutions that you would like to install",
-                      "constraints": {
-                          "allowedValues": [
-                            {
-                                "label": "KQL Training",
-                                "description": "The KQL Training solution for Microsoft Sentinel contains resources that can help up – skill on understanding the fundamentals and using KQL in advanced scenarios like authoring effective and optimized queries used in Sentinel Analytics, Hunting Queries, Workbooks, etc.",
-                                "value": "KQL Training"
-                            },
-                            {
-                                "label": "Training Lab",
-                                "description": "Microsoft Sentinel Training Lab helps you get ramped up with Microsoft Sentinel providing hands-on practical experience for product features, capabilities, and scenarios.",
-                                "value": "Microsoft Sentinel Training Lab"
-                            }
-                          ],
-                          "required": false
-                      },
-                      "visible": true
                   }
               ]
           },
@@ -474,69 +439,6 @@
                           "required": true
                       },
                       "visible": true
-                  },
-                  {
-                    "name": "aadStreams",
-                      "type": "Microsoft.Common.DropDown",
-                      "label": "Select Azure Active Directory log types to enable",
-                      "placeholder": "",
-                      "multiselect": true,
-                      "defaultValue": [{"value": "SignInLogs"}, {"value": "AuditLogs"}],
-                      "toolTip": "Select Azure Active Directory log types you would like to stream to the workspace",
-                      "constraints": {
-                          "allowedValues": [
-                              {
-                                  "label": "Signin Logs",
-                                  "value": "SignInLogs"
-                              },
-                              {
-                                  "label": "Audit Logs",
-                                  "value": "AuditLogs"
-                              },
-                              {
-                                  "label": "Non-Interactive User Sign-In Log (Preview)",
-                                  "value": "NonInteractiveUserSignInLogs"
-                              },
-                              {
-                                  "label": "Service Principal Sign-In Logs (Preview)",
-                                  "value": "ServicePrincipalSignInLogs"
-                              },
-                              {
-                                  "label": "Managed Identity Sign-In Logs (Preview)",
-                                  "value": "ManagedIdentitySignInLogs"
-                              },
-                              {
-                                  "label": "Provisioning Logs (Preview)",
-                                  "value": "ProvisioningLogs"
-                              },
-                              {
-                                  "label": "ADFS Sign-In Logs (Preview)",
-                                  "value": "ADFSSignInLogs"
-                              },
-                              {
-                                  "label": "User Risk Events (Preview)",
-                                  "value": "UserRiskEvents"
-                              },
-                              {
-                                  "label": "Risky Users (Preview)",
-                                  "value": "RiskyUsers"
-                              },
-                              {
-                                  "label": "Network Access Traffic Logs (Preview)",
-                                  "value": "NetworkAccessTrafficLogs"
-                              },
-                              {
-                                  "label": "Risky Service Principals (Preview)",
-                                  "value": "RiskyServicePrincipals"
-                              },
-                              {
-                                  "label": "Service Principal Risk Events (Preview)",
-                                  "value": "ServicePrincipalRiskEvents"
-                              }
-                          ],
-                          "required": false
-                      },
-                      "visible": "[if(contains(steps('dataConnectors').enableDataConnectors,'AzureActiveDirectory'),true,false)]"
                   }
               ]
           },
@@ -575,37 +477,6 @@
                           "validationMessage": "Enables Scheduled and NRT rules matching any of the selected solutions and connectors"
                       },
                       "visible": true
-                  },
-                  {
-                      "name": "severityLevels",
-                      "type": "Microsoft.Common.DropDown",
-                      "label": "Select the severity of the rules to enable",
-                      "placeholder": "",
-                      "multiselect": true,
-                      "defaultValue": [{"value": "High"}, {"value": "Medium"}],
-                      "toolTip": "Select the data connectors that you would like to enable",
-                      "constraints": {
-                          "allowedValues": [
-                              {
-                                  "label": "High",
-                                  "value": "High"
-                              },
-                              {
-                                  "label": "Medium",
-                                  "value": "Medium"
-                              },
-                              {
-                                  "label": "Low",
-                                  "value": "Low"
-                              },
-                              {
-                                  "label": "Informational",
-                                  "value": "informational"
-                              }
-                          ],
-                          "required": false
-                      },
-                      "visible": "[if(steps('analyticsRules').enableScheduledAlerts, true, false)]"
                   }
               ]
           }
@@ -624,7 +495,6 @@
             "enableSolutionsTraining": "[steps('solutions').enableSolutionsTraining]",
             "enableDataConnectors": "[steps('dataConnectors').enableDataConnectors]",
             "aadStreams": "[steps('dataConnectors').aadStreams]",
-            "location": "[location()]",
             "enableMLAlerts": "[steps('analyticsRules').enableMLAlerts]",
             "enableScheduledAlerts": "[steps('analyticsRules').enableScheduledAlerts]",
             "severityLevels": "[steps('analyticsRules').severityLevels]",

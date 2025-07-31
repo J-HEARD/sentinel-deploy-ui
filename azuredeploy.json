@@ -6,10 +6,6 @@
             "type": "string",
             "defaultValue": "CISO-RG-SENTINEL"
         },
-        "location": {
-            "type": "string",
-            "defaultValue": "australia east"
-        },
         "workspaceName": {
             "type": "string",
             "defaultValue": "CISO-WS-SENTINEL",
@@ -51,20 +47,6 @@
             ],
             "defaultValue": 100
         },
-        "enableDataConnectors": {
-            "type": "array",
-            "metadata": {
-                "description": "The kind of data connectors that can be deployed via ARM templates are the following: [\"AzureActivityLog\",\"SecurityInsightsSecurityEventCollectionConfiguration\",\"WindowsFirewall\",\"DnsAnalytics\"], Reference: https://docs.microsoft.com/azure/templates/microsoft.operationalinsights/2020-03-01-preview/workspaces/datasources#microsoftoperationalinsightsworkspacesdatasources-object"
-            },
-            "defaultValue": []
-        },
-        "severityLevels": {
-            "type": "array",
-            "metadata": {
-                "description": "Severity levels desired for Analytics Rules"
-            },
-            "defaultValue": []
-        },
         "dailyQuota": {
             "type": "int",
             "metadata": {
@@ -87,34 +69,6 @@
             },
             "defaultValue": true
         },
-        "enableSolutions1P": {
-            "type": "array",
-            "metadata": {
-                "description": "The list of Content Hub 1st party solutions to deploy."
-            },
-            "defaultValue": []
-        },
-        "enableSolutionsEssentials": {
-            "type": "array",
-            "metadata": {
-                "description": "The list of Content Hub Essentials solutions to deploy."
-            },
-            "defaultValue": []
-        },
-        "enableSolutionsTraining": {
-            "type": "array",
-            "metadata": {
-                "description": "The list of Content Hub Training solutions to deploy."
-            },
-            "defaultValue": []
-        },
-        "aadStreams": {
-            "type": "array",
-            "metadata": {
-                "description": "The list of data types to enable for Azure AD connector"
-            },
-            "defaultValue": []
-        },
         "enableUeba": {
             "type": "bool",
             "metadata": {
@@ -122,36 +76,15 @@
             },
             "defaultValue": true
         },
-        "identityProviders": {
-            "type": "array",
-            "metadata": {
-                "description": "Array of identity providers to be synched with UEBA. Valid identity providers are 'ActiveDirectory' and 'AzureActiveDirectory'"
-            },
-            "defaultValue": []
-        },
         "enableDiagnostics": {
             "type": "bool"
-        },
-        "enableMLAlerts": {
-            "type": "bool",
-            "metadata": {
-                "description": "Enable ML Behavior Analytics rules"
-            },
-            "defaultValue": false
-        },
-        "enableScheduledAlerts": {
-            "type": "bool",
-            "metadata": {
-                "description": "Enable Scheduled analytics rules"
-            },
-            "defaultValue": false
         },
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
                 "description": "The location of resources"
             },
-            "defaultValue": "https://raw.githubusercontent.com/garybushey/AllInOneGov/main"
+            "defaultValue": "https://raw.githubusercontent.com/J-HEARD/sentinel-deploy-ui/main"
         }
     },
     "variables": {},
@@ -160,7 +93,6 @@
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "2020-06-01",
             "name": "[parameters('rgName')]",
-            "location": "[parameters('location')]",
             "properties": {}
         },
         {
@@ -222,9 +154,6 @@
                     },
                     "enableUeba": {
                         "value": "[parameters('enableUeba')]"
-                    },
-                    "identityProviders": {
-                        "value": "[parameters('identityProviders')]"
                     },
                     "enableDiagnostics": {
                         "value": "[parameters('enableDiagnostics')]"
