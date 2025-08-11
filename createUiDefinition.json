@@ -314,11 +314,11 @@
                     {
                         "name": "identityProviders",
                         "type": "Microsoft.Common.DropDown",
-                        "label": "Identity providers for UEBA",
-                        "placeholder": "",
+                        "label": "Identity providers for UEBA (Optional)",
+                        "placeholder": "Select identity providers (optional)",
                         "multiselect": true,
-                        "defaultValue": ["AzureActiveDirectory"],
-                        "toolTip": "Select identity providers to sync with UEBA",
+                        "defaultValue": [],
+                        "toolTip": "Select identity providers to sync with UEBA. Leave empty if not sure - you can configure this later in the portal.",
                         "constraints": {
                             "allowedValues": [
                                 {

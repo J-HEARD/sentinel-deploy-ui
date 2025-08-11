@@ -20,14 +20,14 @@
             "metadata": {
                 "description": "Array of identity providers to be synched with UEBA. Valid identity providers are 'ActiveDirectory' and 'AzureActiveDirectory'"
             },
-            "defaultValue": ["AzureActiveDirectory"]
+            "defaultValue": []
         }
     },
     "variables": {
     },
     "resources": [
         {
-            "condition": "[parameters('enableUeba')]",
+            "condition": "[and(parameters('enableUeba'), not(empty(parameters('identityProviders'))))]",
             "type": "Microsoft.SecurityInsights/settings",
             "apiVersion": "2022-12-01-preview",
             "name": "EntityAnalytics",
