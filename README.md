@@ -12,20 +12,6 @@ This deployment focuses on the essential foundation for Microsoft Sentinel:
 4. **Data Connectors** - Configures selected data connectors (optional)
 5. **UEBA Settings** - Configures User Entity Behavior Analytics (optional)
 
-## What This Does NOT Deploy
-
-This repository intentionally excludes content that will be managed separately:
-- Analytics Rules
-- Hunting Queries
-- Workbooks
-- Playbooks/Logic Apps
-- Watchlists
-- Solutions from Content Hub
-- Custom parsers
-- Automation rules
-
-These items should be managed in a separate repository for better content lifecycle management.
-
 ## Available Data Connectors
 
 The following data connectors can be enabled during deployment:
