@@ -1,4 +1,4 @@
-# 🛡️ Microsoft Sentinel Deployment 🛡️
+# 🛡️ Sentinel Deployment 🛡️
 
 This repository contains ARM templates for deploying the core infrastructure components of Microsoft Sentinel.
 
