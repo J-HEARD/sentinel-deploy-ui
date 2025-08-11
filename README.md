@@ -1,4 +1,4 @@
-# Microsoft Sentinel Core Deployment
+# 🛡️ Microsoft Sentinel Deployment 🛡️
 
 This repository contains ARM templates for deploying the core infrastructure components of Microsoft Sentinel.
 
@@ -92,20 +92,3 @@ Subscription
         ├── UEBA (optional)
         └── Data Connectors (optional)
 ```
-
-## Post-Deployment
-
-After the core infrastructure is deployed:
-
-1. **Verify Deployment**: Check that the workspace and Sentinel are properly configured
-2. **Configure Additional Connectors**: Enable any additional data connectors through the Sentinel portal
-3. **Deploy Content**: Use a separate repository/pipeline to deploy:
-   - Analytics rules
-   - Hunting queries
-   - Workbooks
-   - Playbooks
-   - Other Sentinel content
-
-## Support
-
-For issues or questions, please open an issue in the repository.
