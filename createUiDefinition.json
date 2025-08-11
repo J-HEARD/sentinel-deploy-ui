@@ -29,7 +29,7 @@
                     "regex": "^[a-zA-Z0-9-._()]+$",
                     "validationMessage": "Only alphanumeric characters, hyphens, underscores, periods, and parentheses are allowed."
                 },
-                "visible": true
+                "visible": true  
             },
             {
                 "name": "workspaceName",
@@ -308,31 +308,8 @@
                         "name": "enableUeba",
                         "type": "Microsoft.Common.CheckBox",
                         "label": "Enable User Entity Behavior Analytics (UEBA)",
-                        "toolTip": "Enable UEBA to detect anomalous user behavior",
+                        "toolTip": "Enable UEBA to detect anomalous user behavior. Identity provider configuration can be done later through the portal.",
                         "defaultValue": true
-                    },
-                    {
-                        "name": "identityProviders",
-                        "type": "Microsoft.Common.DropDown",
-                        "label": "Identity providers for UEBA (Optional)",
-                        "placeholder": "Select identity providers (optional)",
-                        "multiselect": true,
-                        "defaultValue": [],
-                        "toolTip": "Select identity providers to sync with UEBA. Leave empty if not sure - you can configure this later in the portal.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Azure Active Directory",
-                                    "value": "AzureActiveDirectory"
-                                },
-                                {
-                                    "label": "Active Directory (requires Azure AD Connect)",
-                                    "value": "ActiveDirectory"
-                                }
-                            ],
-                            "required": false
-                        },
-                        "visible": "[steps('settings').enableUeba]"
                     }
                 ]
             }
@@ -346,7 +323,6 @@
             "capacityReservation": "[basics('capacityReservation')]",
             "immediatePurgeDataOn30Days": true,
             "enableUeba": "[steps('settings').enableUeba]",
-            "identityProviders": "[steps('settings').identityProviders]",
             "enableDataConnectors": "[steps('dataConnectors').enableDataConnectors]",
             "aadStreams": "[steps('dataConnectors').aadStreams]",
             "location": "[location()]"

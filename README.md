@@ -79,7 +79,6 @@ New-AzSubscriptionDeployment `
 | dailyQuota | Daily ingestion limit in GB (0 = unlimited) | 0 |
 | dataRetention | Data retention in days (7-730) | 90 |
 | enableUeba | Enable User Entity Behavior Analytics | true |
-| identityProviders | Identity providers for UEBA | ["AzureActiveDirectory"] |
 | enableDataConnectors | Array of data connectors to enable | [] |
 | aadStreams | Azure AD log types to collect | [] |
 

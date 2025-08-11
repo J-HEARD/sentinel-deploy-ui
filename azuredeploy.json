@@ -80,13 +80,7 @@
             },
             "defaultValue": true
         },
-        "identityProviders": {
-            "type": "array",
-            "metadata": {
-                "description": "Array of identity providers to be synched with UEBA. Valid identity providers are 'ActiveDirectory' and 'AzureActiveDirectory'. Leave empty to skip EntityAnalytics configuration."
-            },
-            "defaultValue": []
-        },
+
         "enableDataConnectors": {
             "type": "array",
             "metadata": {
@@ -184,9 +178,6 @@
                     },
                     "enableUeba": {
                         "value": "[parameters('enableUeba')]"
-                    },
-                    "identityProviders": {
-                        "value": "[parameters('identityProviders')]"
                     }
                 }
             }

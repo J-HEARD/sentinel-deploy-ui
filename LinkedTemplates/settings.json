@@ -14,29 +14,11 @@
                 "description": "Whether or not UEBA should be enabled"
             },
             "defaultValue": true
-        },
-        "identityProviders": {
-            "type": "array",
-            "metadata": {
-                "description": "Array of identity providers to be synched with UEBA. Valid identity providers are 'ActiveDirectory' and 'AzureActiveDirectory'"
-            },
-            "defaultValue": []
         }
     },
     "variables": {
     },
     "resources": [
-        {
-            "condition": "[and(parameters('enableUeba'), not(empty(parameters('identityProviders'))))]",
-            "type": "Microsoft.SecurityInsights/settings",
-            "apiVersion": "2022-12-01-preview",
-            "name": "EntityAnalytics",
-            "kind": "EntityAnalytics",
-            "scope": "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]",
-            "properties": {
-                "entityProviders": "[parameters('identityProviders')]"
-            }
-        },
         {
             "condition": "[parameters('enableUeba')]",
             "type": "Microsoft.OperationsManagement/solutions",
