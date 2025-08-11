@@ -44,6 +44,7 @@
         }
     },
     "variables": {
+        "aadName": "[concat('aad', uniqueString(resourceGroup().id))]",
         "o365Name": "[concat('o365', uniqueString(resourceGroup().id))]",
         "m365dName": "[concat('m365d', uniqueString(resourceGroup().id))]",
         "d365Name": "[concat('d365', uniqueString(resourceGroup().id))]",
@@ -116,6 +117,22 @@
             }
         },
         {
+            "condition": "[contains(parameters('dataConnectorsKind'), 'AzureActiveDirectory')]",
+            "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
+            "apiVersion": "2020-01-01",
+            "location": "[parameters('location')]",
+            "name": "[concat(parameters('workspaceName'),'/Microsoft.SecurityInsights/',variables('aadName'))]",
+            "kind": "AzureActiveDirectory",
+            "properties": {
+                "tenantId": "[parameters('tenantId')]",
+                "dataTypes": {
+                    "alerts": {
+                        "state": "enabled"
+                    }
+                }
+            }
+        },
+        {
             "condition": "[contains(parameters('dataConnectorsKind'), 'Office365')]",
             "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
             "apiVersion": "2020-01-01",
@@ -138,50 +155,7 @@
             }
         },
 
-        {
-            "condition": "[contains(parameters('dataConnectorsKind'), 'AzureActivity')]",
-            "type": "Microsoft.Insights/diagnosticSettings",
-            "apiVersion": "2021-05-01-preview",
-            "scope": "[concat('/subscriptions/', parameters('subscriptionId'))]",
-            "name": "[concat('sentinel-', parameters('workspaceName'))]",
-            "properties": {
-                "workspaceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]",
-                "logs": [
-                    {
-                        "category": "Administrative",
-                        "enabled": true
-                    },
-                    {
-                        "category": "Security",
-                        "enabled": true
-                    },
-                    {
-                        "category": "ServiceHealth",
-                        "enabled": true
-                    },
-                    {
-                        "category": "Alert",
-                        "enabled": true
-                    },
-                    {
-                        "category": "Recommendation",
-                        "enabled": true
-                    },
-                    {
-                        "category": "Policy",
-                        "enabled": true
-                    },
-                    {
-                        "category": "Autoscale",
-                        "enabled": true
-                    },
-                    {
-                        "category": "ResourceHealth",
-                        "enabled": true
-                    }
-                ]
-            }
-        },
+
         {
             "condition": "[contains(parameters('dataConnectorsKind'), 'MicrosoftDefenderForCloud')]",
             "type": "Microsoft.OperationalInsights/workspaces/providers/dataConnectors",
