@@ -29,9 +29,8 @@ These items should be managed in a separate repository for better content lifecy
 ## Available Data Connectors
 
 The following data connectors can be enabled during deployment:
-- Azure Active Directory (with configurable log types)
-- Azure Active Directory Identity Protection
-- Azure Activity
+- Azure Active Directory (includes Identity Protection alerts, with configurable log types)
+- Azure Activity (subscription-level activity logs)
 - Office 365 (Exchange, SharePoint, Teams)
 - Microsoft Defender for Cloud
 - Microsoft 365 Defender

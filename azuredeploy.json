@@ -84,7 +84,7 @@
         "enableDataConnectors": {
             "type": "array",
             "metadata": {
-                "description": "Array of data connector types to enable. Options: AzureActiveDirectory, AzureActiveDirectoryIDP, AzureActivity, Office365, MicrosoftDefenderForCloud, Microsoft365Defender, Dynamics365, IOT, Office365Project, OfficeIRM, PowerBI, ThreatIntelligence"
+                "description": "Array of data connector types to enable. Options: AzureActiveDirectory, AzureActivity, Office365, MicrosoftDefenderForCloud, Microsoft365Defender, Dynamics365, IOT, Office365Project, OfficeIRM, PowerBI, ThreatIntelligence"
             },
             "defaultValue": []
         },
