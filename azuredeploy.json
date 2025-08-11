@@ -4,7 +4,10 @@
     "parameters": {
         "rgName": {
             "type": "string",
-            "defaultValue": "CISO-RG-SENTINEL"
+            "defaultValue": "CISO-RG-SENTINEL",
+            "metadata": {
+                "description": "Name of the resource group to create"
+            }
         },
         "workspaceName": {
             "type": "string",
@@ -33,7 +36,7 @@
         "capacityReservation": {
             "type": "int",
             "metadata": {
-                "description": "Commitment tier"
+                "description": "Commitment tier (only applies to CapacityReservation pricing tier)"
             },
             "allowedValues": [
                 100,
@@ -51,7 +54,8 @@
             "type": "int",
             "metadata": {
                 "description": "Daily ingestion limit in GBs. This limit doesn't apply to the following tables: SecurityAlert, SecurityBaseline, SecurityBaselineSummary, SecurityDetection, SecurityEvent, WindowsFirewall, MaliciousIPCommunication, LinuxAuditLog, SysmonEvent, ProtectionStatus, WindowsEvent"
-            }
+            },
+            "defaultValue": 0
         },
         "dataRetention": {
             "type": "int",
@@ -76,20 +80,38 @@
             },
             "defaultValue": true
         },
+        "identityProviders": {
+            "type": "array",
+            "metadata": {
+                "description": "Array of identity providers to be synched with UEBA. Valid identity providers are 'ActiveDirectory' and 'AzureActiveDirectory'"
+            },
+            "defaultValue": ["AzureActiveDirectory"]
+        },
+        "enableDataConnectors": {
+            "type": "array",
+            "metadata": {
+                "description": "Array of data connector types to enable. Options: AzureActiveDirectory, AzureActiveDirectoryIDP, AzureActivity, Office365, MicrosoftDefenderForCloud, Microsoft365Defender, Dynamics365, IOT, Office365Project, OfficeIRM, PowerBI, ThreatIntelligence"
+            },
+            "defaultValue": []
+        },
         "aadStreams": {
             "type": "array",
-            "defaultValue": [
-                "SignInLogs",
-                "AuditLogs"
-            ],
             "metadata": {
                 "description": "The list of data types to enable for Azure AD connector"
+            },
+            "defaultValue": []
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[deployment().location]",
+            "metadata": {
+                "description": "Location for all resources."
             }
         },
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
-                "description": "The location of resources"
+                "description": "The location of linked templates"
             },
             "defaultValue": "https://raw.githubusercontent.com/J-HEARD/sentinel-deploy-ui/main"
         }
@@ -100,7 +122,7 @@
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "2020-06-01",
             "name": "[parameters('rgName')]",
-            "location": "Australia East",
+            "location": "[parameters('location')]",
             "properties": {}
         },
         {
@@ -114,7 +136,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/Tools/Sentinel-All-In-One/v2/LinkedTemplates/workspace.json",
+                    "uri": "[concat(parameters('_artifactsLocation'), '/LinkedTemplates/workspace.json')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -137,31 +159,7 @@
                         "value": "[parameters('capacityReservation')]"
                     },
                     "location": {
-                        "value": "Australia East"
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "name": "enableSentinel",
-            "apiVersion": "2020-06-01",
-            "dependsOn": [
-                "workspaceCreation"
-            ],
-            "resourceGroup": "[parameters('rgName')]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(parameters('_artifactsLocation'), '/LinkedTemplates/sentinel.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "workspaceName": {
-                        "value": "[parameters('workspaceName')]"
-                    },
-                    "location": {
-                        "value": "Australia East"
+                        "value": "[parameters('location')]"
                     }
                 }
             }
@@ -171,7 +169,7 @@
             "name": "settings",
             "apiVersion": "2020-06-01",
             "dependsOn": [
-                "enableSentinel"
+                "workspaceCreation"
             ],
             "resourceGroup": "[parameters('rgName')]",
             "properties": {
@@ -186,17 +184,22 @@
                     },
                     "enableUeba": {
                         "value": "[parameters('enableUeba')]"
+                    },
+                    "identityProviders": {
+                        "value": "[parameters('identityProviders')]"
                     }
                 }
             }
         },
         {
-            "name": "enableDataConnectors",
+            "condition": "[not(empty(parameters('enableDataConnectors')))]",
+            "name": "dataConnectors",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-06-01",
             "resourceGroup": "[parameters('rgName')]",
             "dependsOn": [
-                "enableSentinel"
+                "workspaceCreation",
+                "settings"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -205,6 +208,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "dataConnectorsKind": {
+                        "value": "[parameters('enableDataConnectors')]"
+                    },
                     "aadStreams": {
                         "value": "[parameters('aadStreams')]"
                     },
@@ -218,7 +224,7 @@
                         "value": "[subscription().subscriptionId]"
                     },
                     "location": {
-                        "value": "Australia East"
+                        "value": "[parameters('location')]"
                     }
                 }
             }
@@ -229,9 +235,13 @@
             "type": "string",
             "value": "[parameters('workspaceName')]"
         },
-        "deploymentStatus": {
+        "workspaceId": {
             "type": "string",
-            "value": "Microsoft Sentinel deployed successfully with core data connectors (AAD + Office 365 + Microsoft Defender for Identity)."
+            "value": "[reference('workspaceCreation').outputs.workspaceId.value]"
+        },
+        "dataConnectorsList": {
+            "type": "string",
+            "value": "[if(empty(parameters('enableDataConnectors')), 'None', replace(replace(string(parameters('enableDataConnectors')),'\"',''),'[',''))]"
         }
     }
 }

@@ -1,70 +1,112 @@
-# 🛡️ Sentinel Deploy 🛡️
+# Microsoft Sentinel Core Deployment
 
-This repository contains the infrastructure templates used to deploy a baseline Microsoft Sentinel environment into an Azure tenant. 
-It is intended to be launched using the Deploy to Azure button below or integrated into an Azure DevOps pipeline.
-
----
+This repository contains ARM templates for deploying the core infrastructure components of Microsoft Sentinel.
 
 ## What This Deploys
 
-This deployment will:
+This deployment focuses on the essential foundation for Microsoft Sentinel:
 
-- Create a Log Analytics Workspace (`CISO-WS-SENTINEL`)
-- Enable Microsoft Sentinel on that workspace
-- Configure workspace retention and daily quota settings
-- Deploy a core set of Microsoft-native data connectors
-- Prepare the environment for automated Sentinel content deployment via DevOps
-- Provision a User Assigned Managed Identity (UAMI) if required
+1. **Resource Group** - Creates a new resource group for all Sentinel resources
+2. **Log Analytics Workspace** - Sets up the workspace with configurable retention and pricing
+3. **Microsoft Sentinel** - Enables Sentinel on the workspace
+4. **Data Connectors** - Configures selected data connectors (optional)
+5. **UEBA Settings** - Configures User Entity Behavior Analytics (optional)
 
-All resources follow a CISO-aligned naming convention and will deploy into your selected Azure Subscription and Resource Group.
+## What This Does NOT Deploy
 
----
+This repository intentionally excludes content that will be managed separately:
+- Analytics Rules
+- Hunting Queries
+- Workbooks
+- Playbooks/Logic Apps
+- Watchlists
+- Solutions from Content Hub
+- Custom parsers
+- Automation rules
 
-## Included Data Connectors
+These items should be managed in a separate repository for better content lifecycle management.
 
-The following Microsoft-native connectors are deployed and surfaced in Sentinel:
+## Available Data Connectors
 
-- Azure Activity  
-- Microsoft 365 (formerly Office 365)  
-- Microsoft Defender for Identity  
-- Microsoft Defender XDR
-- Microsoft Entra ID  
-- Microsoft Entra ID Protection  
-- Microsoft Defender for Cloud (Legacy – subscription-based)
+The following data connectors can be enabled during deployment:
+- Azure Active Directory (with configurable log types)
+- Azure Active Directory Identity Protection
+- Azure Activity
+- Office 365 (Exchange, SharePoint, Teams)
+- Microsoft Defender for Cloud
+- Microsoft 365 Defender
+- Dynamics 365
+- Microsoft Defender for IoT
+- Office 365 Project
+- Office IRM
+- Power BI
+- Threat Intelligence
 
----
+## Deployment Options
 
-## Usage Requirements
+### Deploy via Azure Portal
 
-You must have the following permissions to deploy:
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FJ-HEARD%2Fsentinel-deploy-ui%2Fmain%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FJ-HEARD%2Fsentinel-deploy-ui%2Fmain%2FcreateUiDefinition.json)
 
-- Contributor on the target subscription or resource group
-- Permission to register resource providers (required for first-time workspace deployment)
-- Optional: Security Admin to connect certain services manually (e.g., Defender XDR)
+### Deploy via Azure CLI
 
----
+```bash
+az deployment sub create \
+  --location <location> \
+  --template-uri https://raw.githubusercontent.com/J-HEARD/sentinel-deploy-ui/main/azuredeploy.json \
+  --parameters rgName=<resourceGroupName> workspaceName=<workspaceName>
+```
 
-## Deployment
+### Deploy via PowerShell
 
-Click the button below to open the deployment interface in the Azure Portal:
+```powershell
+New-AzSubscriptionDeployment `
+  -Location <location> `
+  -TemplateUri "https://raw.githubusercontent.com/J-HEARD/sentinel-deploy-ui/main/azuredeploy.json" `
+  -rgName <resourceGroupName> `
+  -workspaceName <workspaceName>
+```
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FJ-HEARD%2Fsentinel-deploy-ui%2Fmain%2Fazuredeploy.json)
+## Parameters
 
----
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| rgName | Resource group name | CISO-RG-SENTINEL |
+| workspaceName | Log Analytics workspace name | CISO-WS-SENTINEL |
+| location | Azure region for deployment | Deployment location |
+| pricingTier | Workspace pricing tier | PerGB2018 |
+| capacityReservation | Daily commitment (GB) for CapacityReservation tier | 100 |
+| dailyQuota | Daily ingestion limit in GB (0 = unlimited) | 0 |
+| dataRetention | Data retention in days (7-730) | 90 |
+| enableUeba | Enable User Entity Behavior Analytics | true |
+| identityProviders | Identity providers for UEBA | ["AzureActiveDirectory"] |
+| enableDataConnectors | Array of data connectors to enable | [] |
+| aadStreams | Azure AD log types to collect | [] |
 
-## Repo Contents
+## Architecture
 
-| File/Folder               | Purpose                                                         |
-|---------------------------|-----------------------------------------------------------------|
-| `azuredeploy.json`        | Master template for infrastructure deployment                   |
-| `createUiDefinition.json` | (Optional) Custom deployment interface for Azure Portal         |
-| `LinkedTemplates/`        | Modular templates for workspace, connectors, and settings       |
+```
+Subscription
+└── Resource Group (rgName)
+    └── Log Analytics Workspace (workspaceName)
+        ├── Microsoft Sentinel (enabled)
+        ├── UEBA (optional)
+        └── Data Connectors (optional)
+```
 
----
+## Post-Deployment
 
-## Note
+After the core infrastructure is deployed:
 
-This repository focuses strictly on deploying static infrastructure — it does not include any analytics rules, automation, playbooks, or hunting queries.  
-All operational Sentinel content is managed separately through DevOps pipelines.
+1. **Verify Deployment**: Check that the workspace and Sentinel are properly configured
+2. **Configure Additional Connectors**: Enable any additional data connectors through the Sentinel portal
+3. **Deploy Content**: Use a separate repository/pipeline to deploy:
+   - Analytics rules
+   - Hunting queries
+   - Workbooks
+   - Playbooks
+   - Other Sentinel content
 
----
+## Support
+
+For issues or questions, please open an issue in the repository.

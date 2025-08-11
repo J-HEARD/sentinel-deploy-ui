@@ -6,74 +6,80 @@
         "config": {
             "isWizard": false,
             "basics": {
-                "description": "**Microsoft Sentinel All-In-One** deployment, see more information about this project [here](https://github.com/Azure/Azure-Sentinel/Tools/Sentinel-All-In-One/)."
+                "description": "**Microsoft Sentinel Core Deployment** - Deploy resource group, workspace, enable Sentinel, and configure data connectors.",
+                "location": {
+                    "label": "Location",
+                    "toolTip": "Location for all resources",
+                    "resourceTypes": [
+                        "Microsoft.OperationalInsights/workspaces"
+                    ]
+                }
             }
         },
         "basics": [
             {
                 "name": "rgName",
                 "type": "Microsoft.Common.TextBox",
-                "label": "Resource Group name",
+                "label": "Resource Group Name",
                 "placeholder": "",
-                "defaultValue": "",
-                "toolTip": "Enter a resource group name",
+                "defaultValue": "CISO-RG-SENTINEL",
+                "toolTip": "Name of the resource group to create",
                 "constraints": {
                     "required": true,
-                    "regex": "^[A-Za-z0-9][A-Za-z0-9-]+[A-Za-z0-9]$",
-                    "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+                    "regex": "^[a-zA-Z0-9-._()]+$",
+                    "validationMessage": "Only alphanumeric characters, hyphens, underscores, periods, and parentheses are allowed."
                 },
-                "visible": true  
+                "visible": true
             },
             {
                 "name": "workspaceName",
                 "type": "Microsoft.Common.TextBox",
                 "label": "Workspace Name",
                 "placeholder": "",
-                "defaultValue": "",
-                "toolTip": "The Workspace name should include 4-63 letters, digits or '-'. The '-' shouldn't be the first or the last symbol.",
+                "defaultValue": "CISO-WS-SENTINEL",
+                "toolTip": "Name for the Log Analytics workspace used to aggregate data",
                 "constraints": {
                     "required": true,
-                    "regex": "^[A-Za-z0-9][A-Za-z0-9-]+[A-Za-z0-9]$",
-                    "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+                    "regex": "^[a-zA-Z0-9-]+$",
+                    "validationMessage": "Only alphanumeric characters and hyphens are allowed."
                 },
                 "visible": true
             },
             {
                 "name": "dailyQuota",
                 "type": "Microsoft.Common.TextBox",
-                "label": "Daily ingestion limit in GBs. Enter 0 for no limit.",
-                "placeholder": "",
+                "label": "Daily ingestion limit (GB)",
+                "placeholder": "0",
                 "defaultValue": "0",
-                "toolTip": "This limit doesn't apply to the following tables: SecurityAlert, SecurityBaseline, SecurityBaselineSummary, SecurityDetection, SecurityEvent, WindowsFirewall, MaliciousIPCommunication, LinuxAuditLog, SysmonEvent, ProtectionStatus, WindowsEvent. [Learn more](https://learn.microsoft.com/azure/azure-monitor/logs/daily-cap)",
+                "toolTip": "Daily ingestion limit in GBs. 0 means no limit.",
                 "constraints": {
-                    "required": true,
-                    "regex": "^[0-9]{1,4}$",
-                    "validationMessage": "Only numbers allowed, and the value must be 1-4 characters long."
+                    "required": false,
+                    "regex": "^[0-9]+$",
+                    "validationMessage": "Must be a valid number"
                 },
                 "visible": true
             },
             {
                 "name": "dataRetention",
-                "type": "Microsoft.Common.TextBox",
-                "label": "Number of days of retention",
-                "placeholder": "",
-                "defaultValue": "90",
-                "toolTip": "Only numbers allowed",
+                "type": "Microsoft.Common.Slider",
+                "min": 7,
+                "max": 730,
+                "label": "Data retention (days)",
+                "defaultValue": 90,
+                "showStepMarkers": false,
+                "toolTip": "Number of days of retention (7-730)",
                 "constraints": {
-                    "required": true,
-                    "regex": "([3-8][0-9]|9[0-9]|[1-6][0-9]{2}|7[0-2][0-9]|730)",
-                    "validationMessage": "Retention must be between 30 and 730 days."
+                    "required": false
                 },
                 "visible": true
             },
             {
                 "name": "pricingTier",
                 "type": "Microsoft.Common.DropDown",
-                "label": "Select pricing tier for Sentinel and Log Analytics",
+                "label": "Pricing Tier",
                 "placeholder": "",
-                "multiselect": false,
-                "toolTip": "Visit [Azure Monitor Pricing page](https://azure.microsoft.com/pricing/details/monitor/) for more information.",
-                "defaultValue": [{"value": "PerGB2018"}],
+                "defaultValue": "PerGB2018",
+                "toolTip": "Select the pricing tier for the workspace",
                 "constraints": {
                     "allowedValues": [
                         {
@@ -92,11 +98,10 @@
             {
                 "name": "capacityReservation",
                 "type": "Microsoft.Common.DropDown",
-                "label": "Select Commitment Tier for Sentinel and Log Analytics",
+                "label": "Commitment Tier",
                 "placeholder": "",
-                "multiselect": false,
                 "defaultValue": 100,
-                "toolTip": "Select the Commitment Tier in GB/day",
+                "toolTip": "Select the daily commitment tier (only applies to Commitment Tier pricing)",
                 "constraints": {
                     "allowedValues": [
                         {
@@ -132,46 +137,219 @@
                             "value": 5000
                         }
                     ],
-                    "required": true
+                    "required": false
                 },
-                "visible": "[if(equals(basics('pricingTier'),'CapacityReservation'), true, false)]"
+                "visible": "[equals(basics('pricingTier'), 'CapacityReservation')]"
             }
         ],
         "steps": [
+            {
+                "name": "dataConnectors",
+                "label": "Data Connectors",
+                "elements": [
+                    {
+                        "name": "infoBoxConnectors",
+                        "type": "Microsoft.Common.InfoBox",
+                        "visible": true,
+                        "options": {
+                            "icon": "Info",
+                            "text": "Select which data connectors to enable in your Microsoft Sentinel environment",
+                            "uri": "https://learn.microsoft.com/azure/sentinel/data-connectors-reference"
+                        }
+                    },
+                    {
+                        "name": "enableDataConnectors",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Select data connectors to enable",
+                        "placeholder": "",
+                        "multiselect": true,
+                        "filter": true,
+                        "filterPlaceholder": "Filter items...",
+                        "multiLine": true,
+                        "defaultDescription": "Select one or more data connectors",
+                        "toolTip": "Select the data connectors that you would like to enable",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Azure Active Directory",
+                                    "description": "Collect Azure AD sign-in and audit logs",
+                                    "value": "AzureActiveDirectory"
+                                },
+                                {
+                                    "label": "Azure Active Directory Identity Protection",
+                                    "description": "Collect Azure AD Identity Protection alerts",
+                                    "value": "AzureActiveDirectoryIDP"
+                                },
+                                {
+                                    "label": "Azure Activity",
+                                    "description": "Collect Azure Activity logs from subscription",
+                                    "value": "AzureActivity"
+                                },
+                                {
+                                    "label": "Office 365",
+                                    "description": "Collect Office 365 audit logs for Exchange, SharePoint, and Teams",
+                                    "value": "Office365"
+                                },
+                                {
+                                    "label": "Microsoft Defender for Cloud",
+                                    "description": "Collect security alerts from Microsoft Defender for Cloud",
+                                    "value": "MicrosoftDefenderForCloud"
+                                },
+                                {
+                                    "label": "Microsoft 365 Defender",
+                                    "description": "Import incidents from Microsoft 365 Defender",
+                                    "value": "Microsoft365Defender"
+                                },
+                                {
+                                    "label": "Dynamics 365",
+                                    "description": "Collect Dynamics 365 activity logs",
+                                    "value": "Dynamics365"
+                                },
+                                {
+                                    "label": "Microsoft Defender for IoT",
+                                    "description": "Collect IoT security alerts",
+                                    "value": "IOT"
+                                },
+                                {
+                                    "label": "Office 365 Project",
+                                    "description": "Collect Office 365 Project logs",
+                                    "value": "Office365Project"
+                                },
+                                {
+                                    "label": "Office IRM",
+                                    "description": "Collect Office Information Rights Management alerts",
+                                    "value": "OfficeIRM"
+                                },
+                                {
+                                    "label": "Power BI",
+                                    "description": "Collect Power BI activity logs",
+                                    "value": "PowerBI"
+                                },
+                                {
+                                    "label": "Threat Intelligence",
+                                    "description": "Import threat indicators",
+                                    "value": "ThreatIntelligence"
+                                }
+                            ],
+                            "required": false
+                        },
+                        "visible": true
+                    },
+                    {
+                        "name": "aadStreams",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Azure AD data types",
+                        "placeholder": "",
+                        "multiselect": true,
+                        "defaultValue": ["SignInLogs", "AuditLogs"],
+                        "toolTip": "Select which Azure AD log types to collect",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Sign-in logs",
+                                    "value": "SignInLogs"
+                                },
+                                {
+                                    "label": "Audit logs",
+                                    "value": "AuditLogs"
+                                },
+                                {
+                                    "label": "Non-interactive user sign-in logs",
+                                    "value": "NonInteractiveUserSignInLogs"
+                                },
+                                {
+                                    "label": "Service principal sign-in logs",
+                                    "value": "ServicePrincipalSignInLogs"
+                                },
+                                {
+                                    "label": "Managed identity sign-in logs",
+                                    "value": "ManagedIdentitySignInLogs"
+                                },
+                                {
+                                    "label": "Provisioning logs",
+                                    "value": "ProvisioningLogs"
+                                },
+                                {
+                                    "label": "ADFS sign-in logs",
+                                    "value": "ADFSSignInLogs"
+                                },
+                                {
+                                    "label": "User risk events",
+                                    "value": "UserRiskEvents"
+                                },
+                                {
+                                    "label": "Risky users",
+                                    "value": "RiskyUsers"
+                                },
+                                {
+                                    "label": "Network access traffic logs",
+                                    "value": "NetworkAccessTrafficLogs"
+                                },
+                                {
+                                    "label": "Risky service principals",
+                                    "value": "RiskyServicePrincipals"
+                                },
+                                {
+                                    "label": "Service principal risk events",
+                                    "value": "ServicePrincipalRiskEvents"
+                                }
+                            ],
+                            "required": false
+                        },
+                        "visible": "[contains(steps('dataConnectors').enableDataConnectors, 'AzureActiveDirectory')]"
+                    }
+                ]
+            },
             {
                 "name": "settings",
                 "label": "Settings",
                 "elements": [
                     {
-                        "name": "infoBoxSettings",
-                        "type": "Microsoft.Common.InfoBox",
-                        "visible": true,
-                        "options": {
-                            "icon": "Info",
-                            "text": "Please select which settings you would like to enable in your Microsoft Sentinel environment"
-                        }
-                    },
-                    {
                         "name": "enableUeba",
                         "type": "Microsoft.Common.CheckBox",
-                        "label": "Enable User Entity Behavior Analytics (UEBA)? Global Admin or Security Admin permission required.",
-                        "toolTip": "This will only enable synchronization with identity providers. Data sources need to be enabled separately. [Learn more](https://learn.microsoft.com/azure/sentinel/identify-threats-with-entity-behavior-analytics)",
+                        "label": "Enable User Entity Behavior Analytics (UEBA)",
+                        "toolTip": "Enable UEBA to detect anomalous user behavior",
+                        "defaultValue": true
+                    },
+                    {
+                        "name": "identityProviders",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Identity providers for UEBA",
+                        "placeholder": "",
+                        "multiselect": true,
+                        "defaultValue": ["AzureActiveDirectory"],
+                        "toolTip": "Select identity providers to sync with UEBA",
                         "constraints": {
-                            "required": false,
-                            "validationMessage": "Please choose"
-                        }
+                            "allowedValues": [
+                                {
+                                    "label": "Azure Active Directory",
+                                    "value": "AzureActiveDirectory"
+                                },
+                                {
+                                    "label": "Active Directory (requires Azure AD Connect)",
+                                    "value": "ActiveDirectory"
+                                }
+                            ],
+                            "required": false
+                        },
+                        "visible": "[steps('settings').enableUeba]"
                     }
                 ]
             }
         ],
         "outputs": {
+            "rgName": "[basics('rgName')]",
             "workspaceName": "[basics('workspaceName')]",
-            "dailyQuota": "[basics('dailyQuota')]",
+            "dailyQuota": "[int(basics('dailyQuota'))]",
             "dataRetention": "[basics('dataRetention')]",
             "pricingTier": "[basics('pricingTier')]",
             "capacityReservation": "[basics('capacityReservation')]",
+            "immediatePurgeDataOn30Days": true,
             "enableUeba": "[steps('settings').enableUeba]",
-            "rgName": "[basics('rgName')]"
+            "identityProviders": "[steps('settings').identityProviders]",
+            "enableDataConnectors": "[steps('dataConnectors').enableDataConnectors]",
+            "aadStreams": "[steps('dataConnectors').aadStreams]",
+            "location": "[location()]"
         }
     }
 }

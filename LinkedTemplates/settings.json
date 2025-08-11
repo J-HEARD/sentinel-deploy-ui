@@ -15,14 +15,28 @@
             },
             "defaultValue": true
         },
-        "settingName": {
-            "type": "string",
-            "defaultValue": "HealthSettings"
+        "identityProviders": {
+            "type": "array",
+            "metadata": {
+                "description": "Array of identity providers to be synched with UEBA. Valid identity providers are 'ActiveDirectory' and 'AzureActiveDirectory'"
+            },
+            "defaultValue": ["AzureActiveDirectory"]
         }
     },
     "variables": {
     },
     "resources": [
+        {
+            "condition": "[parameters('enableUeba')]",
+            "type": "Microsoft.SecurityInsights/settings",
+            "apiVersion": "2022-12-01-preview",
+            "name": "EntityAnalytics",
+            "kind": "EntityAnalytics",
+            "scope": "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]",
+            "properties": {
+                "entityProviders": "[parameters('identityProviders')]"
+            }
+        },
         {
             "condition": "[parameters('enableUeba')]",
             "type": "Microsoft.OperationsManagement/solutions",
