@@ -84,7 +84,7 @@
         "enableDataConnectors": {
             "type": "array",
             "metadata": {
-                "description": "Array of data connector types to enable. Options: AzureActiveDirectory, AzureActivity, Office365, MicrosoftDefenderForCloud, Microsoft365Defender, Dynamics365, IOT, Office365Project, OfficeIRM, PowerBI, ThreatIntelligence"
+                "description": "Array of data connector types to enable. Options: AzureActiveDirectory, Office365, MicrosoftDefenderForCloud, Microsoft365Defender, Dynamics365, IOT, Office365Project, OfficeIRM, PowerBI, ThreatIntelligence"
             },
             "defaultValue": []
         },
@@ -182,52 +182,7 @@
                 }
             }
         },
-        {
-            "condition": "[contains(parameters('enableDataConnectors'), 'AzureActivity')]",
-            "type": "Microsoft.Insights/diagnosticSettings",
-            "apiVersion": "2021-05-01-preview",
-            "name": "[concat('sentinel-azureactivity-', parameters('workspaceName'))]",
-            "dependsOn": [
-                "workspaceCreation"
-            ],
-            "properties": {
-                "workspaceId": "[reference('workspaceCreation').outputs.workspaceId.value]",
-                "logs": [
-                    {
-                        "category": "Administrative",
-                        "enabled": true
-                    },
-                    {
-                        "category": "Security",
-                        "enabled": true
-                    },
-                    {
-                        "category": "ServiceHealth",
-                        "enabled": true
-                    },
-                    {
-                        "category": "Alert",
-                        "enabled": true
-                    },
-                    {
-                        "category": "Recommendation",
-                        "enabled": true
-                    },
-                    {
-                        "category": "Policy",
-                        "enabled": true
-                    },
-                    {
-                        "category": "Autoscale",
-                        "enabled": true
-                    },
-                    {
-                        "category": "ResourceHealth",
-                        "enabled": true
-                    }
-                ]
-            }
-        },
+
         {
             "condition": "[not(empty(parameters('enableDataConnectors')))]",
             "name": "dataConnectors",

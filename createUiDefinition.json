@@ -176,11 +176,6 @@
                                     "value": "AzureActiveDirectory"
                                 },
                                 {
-                                    "label": "Azure Activity",
-                                    "description": "Collect Azure Activity logs from subscription",
-                                    "value": "AzureActivity"
-                                },
-                                {
                                     "label": "Office 365",
                                     "description": "Collect Office 365 audit logs for Exchange, SharePoint, and Teams",
                                     "value": "Office365"
