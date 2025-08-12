@@ -26,8 +26,6 @@ The following data connectors can be enabled during deployment:
 - Power BI
 - Threat Intelligence
 
-Note: Azure Activity logs require subscription-level permissions and should be configured separately after deployment.
-
 ## Deployment Options
 
 ### Deploy via Azure Portal
